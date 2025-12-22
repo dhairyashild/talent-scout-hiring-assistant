@@ -3,14 +3,25 @@ import re, json
 from decouple import config
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 
+
+
+
+
+
 # PAGE SET
 
 st.set_page_config(page_title="TalentScout", page_icon="🤖", layout="centered")
 st.title("🤖 TalentScout Hiring Assistant")
 
+
+
+
 # LOADING UR PROMPTS.JSON
 with open("prompts.json", "r") as f:
     PROMPTS = json.load(f)
+
+
+
 
 # LLM I CALL BY LANGCHAIN CODE WE GOT FROM LANGCHAIN SITE FOR HUGGINGFACE
 key = config("HUGGINGFACEHUB_API_TOKEN")
@@ -23,6 +34,9 @@ llm = HuggingFaceEndpoint(
     huggingfacehub_api_token=key
 )
 model = ChatHuggingFace(llm=llm)
+
+
+
 
 # SESSION STATE = SO WE GET ALL HISTORY I ASKED TO NEW USER, USER I/P I GET HERE
 if "step" not in st.session_state:
@@ -60,6 +74,10 @@ def validate_exp(exp: str) -> bool:
 
 def validate_general(text: str) -> bool:
     return len(text.strip()) >= 2
+
+
+
+
 
 # LLM QUESTION GENERATOR
 def generate_questions(tech: str, exp: str):
