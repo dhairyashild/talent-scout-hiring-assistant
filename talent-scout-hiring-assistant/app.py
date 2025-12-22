@@ -3,21 +3,16 @@ import re, json
 from decouple import config
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 
-# ======================
 # PAGE SETUP
-# ======================
+
 st.set_page_config(page_title="TalentScout", page_icon="🤖", layout="centered")
 st.title("🤖 TalentScout Hiring Assistant")
 
-# ======================
 # LOAD PROMPTS.JSON
-# ======================
 with open("prompts.json", "r") as f:
     PROMPTS = json.load(f)
 
-# ======================
 # LLM SETUP (YOUR CODE)
-# ======================
 key = config("HUGGINGFACEHUB_API_TOKEN")
 repo_id = "meta-llama/Llama-3.1-8B-Instruct"
 
@@ -29,9 +24,7 @@ llm = HuggingFaceEndpoint(
 )
 model = ChatHuggingFace(llm=llm)
 
-# ======================
 # SESSION STATE
-# ======================
 if "step" not in st.session_state:
     st.session_state.step = 0
     st.session_state.name = ""
@@ -47,9 +40,7 @@ if "step" not in st.session_state:
     st.session_state.screening_ended = False
     st.session_state.greet_shown = False
 
-# ======================
 # VALIDATION HELPERS
-# ======================
 def check_exit(text: str) -> bool:
     return text.lower().strip() in ["exit", "quit", "bye", "goodbye", "stop", "end", "cancel"]
 
@@ -70,9 +61,7 @@ def validate_exp(exp: str) -> bool:
 def validate_general(text: str) -> bool:
     return len(text.strip()) >= 2
 
-# ======================
 # LLM QUESTION GENERATOR
-# ======================
 def generate_questions(tech: str, exp: str):
     try:
         prompt = PROMPTS["tech_prompt"].format(experience=exp, tech_stack=tech)
@@ -87,9 +76,7 @@ def generate_questions(tech: str, exp: str):
     except Exception:
         return PROMPTS["fallback"]
 
-# ======================
 # GREETING
-# ======================
 if not st.session_state.greet_shown:
     st.chat_message("assistant").write(PROMPTS["greeting"])
     st.session_state.greet_shown = True
@@ -105,9 +92,7 @@ if st.session_state.screening_ended:
         st.rerun()
     st.stop()
 
-# ======================
 # STEP 0–6: COLLECT 7 FIELDS
-# ======================
 if st.session_state.step == 0:
     # Name
     st.chat_message("assistant").write(PROMPTS["questions"][0])
@@ -223,9 +208,7 @@ elif st.session_state.step == 6:
         else:
             st.chat_message("assistant").write("❌ Please enter a valid tech stack.")
 
-# ======================
 # STEP 7: ASK TECH QUESTIONS ONE BY ONE
-# ======================
 elif st.session_state.step == 7:
     total = len(st.session_state.questions)
     current = st.session_state.current_q
@@ -253,9 +236,7 @@ elif st.session_state.step == 7:
         st.session_state.step = 8
         st.rerun()
 
-# ======================
 # STEP 8: SUMMARY / END
-# ======================
 elif st.session_state.step == 8:
     st.balloons()
     st.success("🎉 Screening Complete!")
