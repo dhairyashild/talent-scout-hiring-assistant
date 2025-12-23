@@ -4,22 +4,15 @@ from decouple import config
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 
 
-
-
-
-
 # PAGE SET
 
 st.set_page_config(page_title="TalentScout", page_icon="🤖", layout="centered")
 st.title("🤖 TalentScout Hiring Assistant")
 
 
-
-
 # LOADING UR PROMPTS.JSON
 with open("prompts.json", "r") as f:
     PROMPTS = json.load(f)
-
 
 
 
